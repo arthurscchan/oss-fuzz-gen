@@ -578,7 +578,7 @@ def populate_benchmarks_using_introspector(project: str, language: str,
                                harness,
                                target_name,
                                function_dict=function,
-                               exceptions=_get_exceptions(function, project)))
+                               exceptions=_get_exceptions(function)))
 
     if len(potential_benchmarks) >= (limit * len(target_oracles)):
       break

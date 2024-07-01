@@ -19,7 +19,7 @@ import logging
 import os
 import re
 from abc import abstractmethod
-from typing import Optional, Tuple
+from typing import Optional, Tuple, List
 
 import jinja2
 import requests
@@ -539,7 +539,7 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
                project_name: str,
                function_args: list[dict[str, str]],
                template_dir: str = DEFAULT_TEMPLATE_DIR,
-               exceptions:List[str] = []):
+               exceptions: Optional[List[str]] = None):
     super().__init__(model)
     self._template_dir = template_dir
     self.project_name = project_name
@@ -617,9 +617,9 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
 
   def _format_exceptions(self) -> str:
     """Formats the exception thrown from this method or constructor."""
-    exception_str = '\n'.join(self.exceptions)
-    if exception_str:
-      return f'<exceptions>{exception_str}</exceptions>'
+    if self.exceptions:
+      exception_str = '\n'.join(self.exceptions)
+      return '<exceptions>' + '\n'.join(self.exceptions) + '</exceptions>'
 
     return ''
 
@@ -666,7 +666,6 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
       target = self._format_target_method(signature)
 
     return target.replace('{EXCEPTIONS}', self._format_exceptions())
-
 
   def _format_requirement(self, signature: str) -> str:
     """Formats a requirement based on the prompt template."""

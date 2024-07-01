@@ -122,7 +122,7 @@ class Benchmark:
                use_context=False,
                commit=None,
                function_dict: Optional[dict] = None,
-               exceptions: List[str] = []):
+               exceptions: Optional[List[str]] = None):
     self.id = benchmark_id
     self.project = project
     self.language = language
