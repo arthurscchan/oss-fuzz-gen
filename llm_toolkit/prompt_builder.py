@@ -538,12 +538,14 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
                model: models.LLM,
                project_name: str,
                function_args: list[dict[str, str]],
-               template_dir: str = DEFAULT_TEMPLATE_DIR):
+               template_dir: str = DEFAULT_TEMPLATE_DIR,
+               exceptions:List[str] = []):
     super().__init__(model)
     self._template_dir = template_dir
     self.project_name = project_name
     self.project_url = self._find_project_url(project_name)
     self.function_args = function_args
+    self.exceptions = exceptions
 
     # Load templates.
     self.base_template_file = self._find_template(template_dir, 'jvm_base.txt')
@@ -613,6 +615,14 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
 
     return method
 
+  def _format_exceptions(self) -> str:
+    """Formats the exception thrown from this method or constructor."""
+    exception_str = '\n'.join(self.exceptions)
+    if exception_str:
+      return f'<exceptions>{exception_str}</exceptions>'
+
+    return ''
+
   def _format_import_mapping(self, full_class_name: str) -> str:
     """Formats the import mapping row on the prompt template."""
     # full_class_name format: <package>.<class_name>$<inner_class_name>
@@ -651,9 +661,12 @@ class DefaultJvmTemplateBuilder(PromptBuilder):
        method and format it for the prompts creation.
     """
     if '<init>' in signature:
-      return self._format_target_constructor(signature)
+      target = self._format_target_constructor(signature)
+    else:
+      target = self._format_target_method(signature)
 
-    return self._format_target_method(signature)
+    return target.replace('{EXCEPTIONS}', self._format_exceptions())
+
 
   def _format_requirement(self, signature: str) -> str:
     """Formats a requirement based on the prompt template."""

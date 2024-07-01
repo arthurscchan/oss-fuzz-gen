@@ -437,6 +437,11 @@ def _get_arg_count(function: dict) -> int:
   return len(raw_arg_types)
 
 
+def _get_exceptions(function: dict) -> List[str]:
+  """Retrieve a list of exceptions thrown from the function."""
+  return function.get('exceptions', [])
+
+
 def _get_arg_names(function: dict, project: str, language: str) -> list[str]:
   """Returns the function argument names."""
   if language == 'jvm':
@@ -572,7 +577,8 @@ def populate_benchmarks_using_introspector(project: str, language: str,
                                    _get_arg_names(function, project, language)),
                                harness,
                                target_name,
-                               function_dict=function))
+                               function_dict=function,
+                               exceptions=_get_exceptions(function, project)))
 
     if len(potential_benchmarks) >= (limit * len(target_oracles)):
       break

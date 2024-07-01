@@ -121,7 +121,8 @@ class Benchmark:
                cppify_headers=False,
                use_context=False,
                commit=None,
-               function_dict: Optional[dict] = None):
+               function_dict: Optional[dict] = None,
+               exceptions: List[str] = []):
     self.id = benchmark_id
     self.project = project
     self.language = language
@@ -136,6 +137,7 @@ class Benchmark:
     self.use_context = use_context
     self.cppify_headers = cppify_headers
     self.commit = commit
+    self.exceptions = exceptions
 
     if self.language == 'jvm':
       # For java projects, in order to differentiate between overloaded methods
