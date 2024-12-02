@@ -56,6 +56,10 @@ Here is a list of other import statements that you may need to make the generate
 {OTHER_IMPORT_STATEMENTS}
 </item>
 <item>
+Here is a comma separated list of public project methods. You must include the invocation of at least one of them in the generated harness. Each of the method signature follows the format of <code>[Full qualified name of the class].method_name(method_arguments)</code>.
+{PUBLIC_METHODS}
+</item>
+<item>
 You MUST ONLY use any of the following methods from the FuzzedDataProvider of the Jazzer framework for generating random data for fuzzing.
 If the needed return value is not found in the table, try use constructors or methods to create the needed random object. But you MUST try your best to randomise the random object with the methods in the table.
 
